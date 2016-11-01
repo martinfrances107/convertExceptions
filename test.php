@@ -11,6 +11,7 @@ class LibraryDiscoveryParserTest {
    * @covers ::buildByExtension
    */
   public function testLibraryThirdPartyWithMissingLicense() {
+    echo 'hello world';
   }
 
  }
