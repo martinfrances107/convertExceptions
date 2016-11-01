@@ -1,0 +1,14 @@
+{
+    "name": "martin/convert-exceptions",
+    "type": "project",
+    "require": {
+        "grom358/pharborist": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "martin107",
+            "email": "martinfrances107@hotmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
