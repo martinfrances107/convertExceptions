@@ -27,7 +27,7 @@ function processFile($filename) {
 
       // Prepare new statement. ( code - newlines - indent ).
       if ($message) {
-        $statement = "\$this->setExpectedException('" . $exception_class . "', " . '"' . $message . '");' . PHP_EOL . PHP_EOL.  '    ';
+        $statement = "\$this->setExpectedException('" . $exception_class . "',"  . $message . ');' . PHP_EOL . PHP_EOL.  '    ';
       }
       else {
         $statement = "\$this->setExpectedException('$exception_class');" . PHP_EOL . '    ' . PHP_EOL;

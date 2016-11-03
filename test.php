@@ -19,7 +19,7 @@ class LibraryDiscoveryParserTest {
    * Tests handling of a echo statement.
    *
    * @expectedException \EchoFirstClass
-   * @expectedExceptionMessage 'Test echo statment node'
+   * @expectedExceptionMessage "Test echo statment node"
    *
    * @covers ::buildByExtension
    */
