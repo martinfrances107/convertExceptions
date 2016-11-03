@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 use Pharborist\Parser;
 use Pharborist\Filter;
+use Pharborist\WhitespaceNode;
 
 function processFile($filename) {
   $tree = Parser::parseFile($filename);
@@ -16,20 +17,38 @@ function processFile($filename) {
     $class_tags = $doc_block->getTagsByName('expectedException');
     if ($class_tags) {
       $exception_class = $class_tags[0]->getDescription();
-      echo "$exception_class\n";
+      //echo "$exception_class\n";
 
       $message_tags = $doc_block->getTagsByName('expectedExceptionMessage');
       if ($message_tags) {
         $message = $message_tags[0]->getDescription();
-        echo "$message\n";
+        //echo "$message\n\n";
       }
 
-      $method_class = $node->parent(Filter::isInstanceOf('Pharborist\Objects\ClassMethodNode'));
+      // Prepare new statement. ( code - newlines - indent ).
+      if ($message) {
+        $statement = "\$this->setExpectedException('" . $exception_class . "', " . '"' . $message . '");' . PHP_EOL . PHP_EOL.  '    ';
+      }
+      else {
+        $statement = "\$this->setExpectedException('$exception_class');" . PHP_EOL . '    ' . PHP_EOL;
+      }
+      $new_nodes = Parser::parseSource($statement);
 
-      // todo
-      // use $exception_class and $message to
-      // insert $this->setExpectedException('') into $method_class
-      var_dump($method_class);
+      // Search method class - skip whitespaces and open brackets find the
+      // first line of code.
+      $method_class = $node->parent(Filter::isInstanceOf('Pharborist\Objects\ClassMethodNode'));
+      // The next two lines of code are crappy -  it will not scale with large
+      // method classes.
+      $lines_of_code = $method_class->find(
+        Filter::any([
+          Filter::isInstanceOf('Pharborist\StatementNode'),
+          Filter::isComment(FALSE) // Ccomment that is not the docBlock
+          ])
+        );
+      $first_line_of_code = $lines_of_code->first();
+      $new_nodes->insertBefore($first_line_of_code);
+
+      file_put_contents('a.php', $tree);
 
     }
   }
