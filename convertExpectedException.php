@@ -24,13 +24,16 @@ function processFile($filename) {
         $message = $message_tags[0]->getDescription();
         //echo "$message\n\n";
       }
+      else {
+        $message = '';
+      }
 
       // Prepare new statement. ( code - newlines - indent ).
       if ($message) {
-        $statement = "\$this->setExpectedException('" . $exception_class . "',"  . $message . ');' . PHP_EOL . PHP_EOL.  '    ';
+        $statement = "\$this->setExpectedException('" . $exception_class . "','"  . $message . "');" . PHP_EOL . PHP_EOL.  '    ';
       }
       else {
-        $statement = "\$this->setExpectedException('$exception_class');" . PHP_EOL . '    ' . PHP_EOL;
+        $statement = "\$this->setExpectedException('$exception_class');" . PHP_EOL . PHP_EOL . '    ';
       }
       $new_nodes = Parser::parseSource($statement);
 
@@ -42,19 +45,19 @@ function processFile($filename) {
       $lines_of_code = $method_class->find(
         Filter::any([
           Filter::isInstanceOf('Pharborist\StatementNode'),
-          Filter::isComment(FALSE) // Ccomment that is not the docBlock
+          Filter::isComment(FALSE) // Comment that is not a docBlock.
           ])
         );
       $first_line_of_code = $lines_of_code->first();
       $new_nodes->insertBefore($first_line_of_code);
 
-      file_put_contents('a.php', $tree);
+      file_put_contents($filename, $tree);
 
     }
   }
 }
 
-processFile('./test.php');
+//processFile('./test.php');
 
 // This exposed a flaw in pharborist.
 // Unless Drupal core is patched with  DO-NOT_COMMIT-2822837-7.patch the classes
@@ -64,7 +67,6 @@ processFile('./test.php');
 
 // The following code will iterate over every class in D8 core
 // - please /Users/martin/sites/drupal/core to point to the core directory for your system.
-  /*
   $directory = new \RecursiveDirectoryIterator('/Users/martin/sites/drupal/core');
   $iterator = new \RecursiveIteratorIterator($directory);
   $pattern = '/^.+Test\.php$/i';
@@ -73,4 +75,4 @@ processFile('./test.php');
     echo "processing: $name\n";
     processFile($name);
   }
-  */
+
