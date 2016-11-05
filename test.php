@@ -2,17 +2,18 @@
 
 class LibraryDiscoveryParserTest {
 
-/**
+  /**
    * Tests handling of expression node.
    *
    * @expectedException \ExpressionNodeClass
    * @expectedExceptionMessage 'Test expression node'
    *
-   * @covers ::buildByExtension
+   * @covers ::bar
    */
   public function testExpressionNode() {
     $this->foo();
     echo 'hello world';
+    Foo::bar();
   }
 
   /**
@@ -21,11 +22,11 @@ class LibraryDiscoveryParserTest {
    * @expectedException \EchoFirstClass
    * @expectedExceptionMessage "Test echo statment node"
    *
-   * @covers ::buildByExtension
+   * @covers ::world
    */
   public function testLibraryThirdPartyWithMissingLicense() {
     echo 'hello world';
-    $this->foo();
+    $hello->world();
   }
 
   /**
@@ -33,13 +34,12 @@ class LibraryDiscoveryParserTest {
    * @expectedException \Commentfirst
    * @expectedExceptionMessage 'Tests code is inserted'
    *
-   * @covers ::buildByExtension
+   * @covers ::foo
    */
   public function testBeforeComment() {
     /* expect insertion before here */
     $this->foo();
     echo 'hello world';
-
   }
 
- }
+}
